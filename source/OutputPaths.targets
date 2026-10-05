@@ -1,0 +1,9 @@
+<Project>
+
+  <PropertyGroup Condition="'$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe'">
+    <OutputPath>$(ProjectRootDir)_out\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <PublishDir>$(ProjectRootDir)_out\publish\</PublishDir>
+  </PropertyGroup>
+
+</Project>

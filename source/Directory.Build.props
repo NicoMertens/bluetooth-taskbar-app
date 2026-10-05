@@ -1,0 +1,9 @@
+<Project>
+
+  <PropertyGroup>
+    <ProjectRootDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</ProjectRootDir>
+    <!-- SDK-Hook nach dem csproj, aber vor der Ausgabepfad-Berechnung: nur dort ist OutputType bekannt. -->
+    <BeforeTargetFrameworkInferenceTargets>$(MSBuildThisFileDirectory)OutputPaths.targets</BeforeTargetFrameworkInferenceTargets>
+  </PropertyGroup>
+
+</Project>
