@@ -1,0 +1,19 @@
+# Keeps develop buildable; publishing is left to release.yml.
+name: Build
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - run: dotnet build source -c Release

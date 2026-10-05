@@ -77,11 +77,21 @@ dotnet run --project source/BluetoothFlyout -- --show
 `--show` öffnet das Flyout direkt, ohne Klick aufs Tray-Icon. Lokale Builds suchen
 nicht nach Updates.
 
-Ein Release entsteht durch einen Versions-Tag; den Rest erledigt GitHub Actions:
+## Branches und Releases
+
+Entwickelt wird auf `develop`. Der Branch `release` enthält immer den Stand der
+zuletzt veröffentlichten Version.
+
+Für ein Release auf `develop` die `<Version>` in `source/Directory.Build.props`
+erhöhen und `develop` nach `release` mergen. GitHub Actions baut daraufhin Setup und
+Update-Pakete, erzeugt den Tag `vX.Y.Z` und veröffentlicht das Release. Gibt es die
+Version schon, bricht der Workflow ab, ohne etwas zu veröffentlichen.
 
 ```powershell
-git tag v1.2.0
-git push origin v1.2.0
+git switch release
+git merge --ff-only develop
+git push
+git switch develop
 ```
 
 Technische Hintergründe: [docs/architektur.md](docs/architektur.md).

@@ -1,17 +1,23 @@
-# Builds an installer and update packages for every version tag (v1.2.3) and
-# publishes them as a GitHub release, which installed copies poll for updates.
+# Every push to the release branch publishes the version from Directory.Build.props:
+# installer and update packages go to a GitHub release, tagged vX.Y.Z, which
+# installed copies poll for updates.
 name: Release
 
 on:
   push:
-    tags: ['v*']
+    branches: [release]
 
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 env:
   VPK_VERSION: 1.2.161
   RELEASES_DIR: _out/releases
+  REPO_URL: ${{ github.server_url }}/${{ github.repository }}
 
 jobs:
   release:
@@ -23,16 +29,27 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Version from tag
+      - name: Read version
         id: version
         shell: pwsh
-        run: echo "value=$('${{ github.ref_name }}'.TrimStart('v'))" >> $env:GITHUB_OUTPUT
+        run: |
+          # Last line only: a fresh runner may print the .NET first-run banner before it.
+          $version = (dotnet msbuild source/BluetoothFlyout/BluetoothFlyout.csproj -getProperty:Version | Select-Object -Last 1).Trim()
+          $tag = "v$version"
+
+          # A version must never be published twice; the bump on develop was probably forgotten.
+          if (git ls-remote --tags origin "refs/tags/$tag") {
+            Write-Error "Tag $tag already exists. Raise <Version> in source/Directory.Build.props."
+            exit 1
+          }
+
+          "value=$version" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
 
       - name: Publish
         run: >
           dotnet publish source/BluetoothFlyout -c Release -r win-x64
-          -p:Version=${{ steps.version.outputs.value }}
-          -p:RepositoryUrl=${{ github.server_url }}/${{ github.repository }}
+          -p:RepositoryUrl=${{ env.REPO_URL }}
 
       - name: Install vpk
         run: dotnet tool install -g vpk --version ${{ env.VPK_VERSION }}
@@ -42,7 +59,7 @@ jobs:
         continue-on-error: true
         run: >
           vpk download github -o ${{ env.RELEASES_DIR }}
-          --repoUrl ${{ github.server_url }}/${{ github.repository }}
+          --repoUrl ${{ env.REPO_URL }}
           --token ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pack
@@ -57,11 +74,13 @@ jobs:
           -f net10.0-x64-desktop
           --shortcuts StartMenuRoot,Startup
 
+      # GitHub creates the tag on the merged commit together with the release.
       - name: Upload release
         run: >
           vpk upload github -o ${{ env.RELEASES_DIR }}
-          --repoUrl ${{ github.server_url }}/${{ github.repository }}
+          --repoUrl ${{ env.REPO_URL }}
           --token ${{ secrets.GITHUB_TOKEN }}
           --publish
           --releaseName "Bluetooth Flyout ${{ steps.version.outputs.value }}"
-          --tag ${{ github.ref_name }}
+          --tag ${{ steps.version.outputs.tag }}
+          --targetCommitish ${{ github.sha }}

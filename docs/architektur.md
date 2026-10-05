@@ -24,8 +24,15 @@ Release- und installierter Build zählen also getrennt.
 ## Releases und Updates
 
 Releases baut [Velopack](https://velopack.io) im Workflow
-`.github/workflows/release.yml`: Setup, Vollpaket und ab dem zweiten Release ein
-Delta-Paket, veröffentlicht als GitHub-Release. Die Repo-Adresse übergibt der
+`.github/workflows/release.yml`, ausgelöst durch jeden Push auf `release`: Setup,
+Vollpaket und ab dem zweiten Release ein Delta-Paket, veröffentlicht als
+GitHub-Release. Die Version kommt aus `source/Directory.Build.props`, der Tag
+`vX.Y.Z` entsteht mit dem Release auf dem gemergten Commit. Ein Merge ist damit der
+einzige Schritt; ein separat gesetzter Tag könnte vom Branch abweichen oder
+vergessen werden. Existiert der Tag schon, bricht der Workflow vor dem Bauen ab.
+`build.yml` baut jeden Push auf `develop` und jeden Pull Request nur zur Kontrolle.
+
+Die Repo-Adresse übergibt der
 Workflow als `RepositoryUrl`; das SDK macht daraus ein Assembly-Attribut, aus dem die
 App zur Laufzeit die Update-Quelle liest. Lokale Builds haben keins und suchen
 deshalb nicht.
