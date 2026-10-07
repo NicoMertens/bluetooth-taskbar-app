@@ -72,16 +72,32 @@ nicht nach Updates.
 Entwickelt wird auf `develop`. Der Branch `release` enthält immer den Stand der
 zuletzt veröffentlichten Version.
 
-Für ein Release auf `develop` die `<Version>` in `source/Directory.Build.props`
-erhöhen und `develop` nach `release` mergen. GitHub Actions baut daraufhin Setup und
-Update-Pakete, erzeugt den Tag `vX.Y.Z` und veröffentlicht das Release. Gibt es die
-Version schon, bricht der Workflow ab, ohne etwas zu veröffentlichen.
+Jeder Push auf `release` veröffentlicht die `<Version>` aus
+`source/Directory.Build.props`: GitHub Actions baut Setup und Update-Pakete, erzeugt
+den Tag `vX.Y.Z` und veröffentlicht das Release. Gibt es die Version schon, bricht der
+Workflow ab, ohne etwas zu veröffentlichen.
+
+**Versionsschema:** `develop` trägt immer schon die nächste Minor-Version.
+
+- **Release:** `develop` per Merge-Commit nach `release` mergen. Direkt danach auf
+  `develop` die Minor-Version erhöhen (z. B. 1.2.0 → 1.3.0).
+- **Hotfix:** direkt auf `release` korrigieren und dabei die Patch-Version erhöhen
+  (z. B. 1.2.0 → 1.2.1). Danach `release` zurück nach `develop` mergen, die Version
+  von `develop` aber behalten — beim Konflikt in `Directory.Build.props` gewinnt
+  `develop`.
 
 ```powershell
+# Release
 git switch release
-git merge --ff-only develop
+git merge --no-ff develop -m "Release 1.2.0"
 git push
 git switch develop
+# <Version> auf 1.3.0 setzen, committen, pushen
+
+# Hotfix zurückholen
+git switch develop
+git merge --no-ff release
+# Konflikt in source/Directory.Build.props: Version von develop behalten
 ```
 
 Technische Hintergründe: [docs/architektur.md](docs/architektur.md).

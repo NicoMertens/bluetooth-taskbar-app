@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <!-- Merging into the release branch publishes this version; raise it on develop first. -->
-    <Version>1.1.0</Version>
+    <!-- A push to release publishes this version. develop already carries the next minor, hotfixes on release raise the patch. -->
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
