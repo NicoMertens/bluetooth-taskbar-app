@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           # Last line only: a fresh runner may print the .NET first-run banner before it.
-          $version = (dotnet msbuild source/BluetoothFlyout/BluetoothFlyout.csproj -getProperty:Version | Select-Object -Last 1).Trim()
+          $version = (dotnet msbuild source/bluetooth-taskbar-app/bluetooth-taskbar-app.csproj -getProperty:Version | Select-Object -Last 1).Trim()
           $tag = "v$version"
 
           # A version must never be published twice; the bump on develop was probably forgotten.
@@ -48,7 +48,7 @@ jobs:
 
       - name: Publish
         run: >
-          dotnet publish source/BluetoothFlyout -c Release -r win-x64
+          dotnet publish source/bluetooth-taskbar-app -c Release -r win-x64
           -p:RepositoryUrl=${{ env.REPO_URL }}
 
       - name: Install vpk
@@ -65,12 +65,12 @@ jobs:
       - name: Pack
         run: >
           vpk pack -o ${{ env.RELEASES_DIR }}
-          -u BluetoothFlyout
+          -u bluetooth-taskbar-app
           -v ${{ steps.version.outputs.value }}
           -p _out/publish
-          -e BluetoothFlyout.exe
-          --packTitle "Bluetooth Flyout"
-          -i source/BluetoothFlyout/Assets/app.ico
+          -e bluetooth-taskbar-app.exe
+          --packTitle "Bluetooth Taskbar App"
+          -i source/bluetooth-taskbar-app/Assets/app.ico
           -f net10.0-x64-desktop
           --shortcuts StartMenuRoot,Startup
 
@@ -81,6 +81,6 @@ jobs:
           --repoUrl ${{ env.REPO_URL }}
           --token ${{ secrets.GITHUB_TOKEN }}
           --publish
-          --releaseName "Bluetooth Flyout ${{ steps.version.outputs.value }}"
+          --releaseName "Bluetooth Taskbar App ${{ steps.version.outputs.value }}"
           --tag ${{ steps.version.outputs.tag }}
           --targetCommitish ${{ github.sha }}

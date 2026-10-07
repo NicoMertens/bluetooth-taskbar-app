@@ -1,4 +1,4 @@
-# BluetoothFlyout
+# bluetooth-taskbar-app
 
 Ein leichtgewichtiges Tray-Applet für Windows 11, das die Bluetooth-Schnellein­stellungen
 ersetzt. Optik und Bedienung orientieren sich am Bluetooth-Widget von KDE Plasma
@@ -35,7 +35,7 @@ Die Oberfläche ist englisch.
 
 ## Installieren
 
-Unter **Releases** die `BluetoothFlyout-win-Setup.exe` der neuesten Version laden
+Unter **Releases** die `bluetooth-taskbar-app-win-Setup.exe` der neuesten Version laden
 und ausführen. Das Setup braucht keine Adminrechte, legt eine Startmenü- und eine
 Autostart-Verknüpfung an und installiert die .NET 10 Desktop Runtime mit, falls sie
 fehlt. Die Exe ist nicht signiert; SmartScreen warnt deshalb beim ersten Start
@@ -71,7 +71,7 @@ Voraussetzung ist das .NET 10 SDK.
 
 ```powershell
 dotnet build source
-dotnet run --project source/BluetoothFlyout -- --show
+dotnet run --project source/bluetooth-taskbar-app -- --show
 ```
 
 `--show` öffnet das Flyout direkt, ohne Klick aufs Tray-Icon. Lokale Builds suchen
