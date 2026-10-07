@@ -186,23 +186,34 @@
             <Border Grid.Row="3" Height="1" Background="{StaticResource SeparatorBrush}" />
 
             <!-- ============ Footer ============ -->
-            <Button Grid.Row="4"
-                    Style="{StaticResource FooterButton}"
-                    Margin="6,5,6,6"
-                    Command="{Binding OpenSettingsCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <Path Data="{StaticResource Icon.Settings}"
-                          Width="15" Height="15"
-                          Margin="2,0,10,0"
-                          Stretch="Uniform"
-                          VerticalAlignment="Center"
-                          Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
-                    <TextBlock Text="Configure Bluetooth…"
-                               FontSize="12.5"
-                               VerticalAlignment="Center"
-                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
-                </StackPanel>
-            </Button>
+            <Grid Grid.Row="4">
+                <Button Style="{StaticResource FooterButton}"
+                        Margin="6,5,6,6"
+                        Command="{Binding OpenSettingsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource Icon.Settings}"
+                              Width="15" Height="15"
+                              Margin="2,0,10,0"
+                              Stretch="Uniform"
+                              VerticalAlignment="Center"
+                              Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                        <TextBlock Text="Configure Bluetooth…"
+                                   FontSize="12.5"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Drawn over the button so the whole footer stays clickable. -->
+                <TextBlock Text="{Binding VersionText}"
+                           Margin="0,0,16,0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontSize="10.5"
+                           Opacity="0.7"
+                           IsHitTestVisible="False"
+                           Foreground="{StaticResource SubtleTextBrush}" />
+            </Grid>
         </Grid>
     </Border>
 </Window>

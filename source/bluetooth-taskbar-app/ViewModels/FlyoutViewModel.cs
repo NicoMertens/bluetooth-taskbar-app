@@ -68,6 +68,8 @@ public sealed class FlyoutViewModel : ObservableObject, IDisposable
 
     public bool ShowMessage => !ShowDeviceList;
 
+    public string VersionText { get; } = $"v{typeof(FlyoutViewModel).Assembly.GetName().Version?.ToString(3)}";
+
     public string MessageText => IsRadioOn ? "No paired devices" : "Bluetooth is off";
 
     /// <summary>True once at least one device is connected — drives the tray icon.</summary>
