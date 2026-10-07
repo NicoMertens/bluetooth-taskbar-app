@@ -5,20 +5,7 @@ ersetzt. Optik und Bedienung orientieren sich am Bluetooth-Widget von KDE Plasma
 (Breeze Dark): Kopfzeile, flache Geräteliste mit Verbinden-Schalter und Akkustand,
 Fußzeile mit Verweis in die Systemeinstellungen.
 
-```
-┌──────────────────────────────────────┐
-│ Bluetooth                         ⟳  │
-├──────────────────────────────────────┤
-│  ⌨  IDE 4000 keyboard        82% ▭   │
-│      Connected                       │
-│  🎧  OpenCirclet i10  [●━━]  90% ▭   │
-│      Connected                       │
-│  🎧  Jabra Elite      [━━○]          │
-│      Not connected                   │
-├──────────────────────────────────────┤
-│  ⚙  Configure Bluetooth…             │
-└──────────────────────────────────────┘
-```
+![Flyout mit gekoppelten Geräten](docs/screenshot.png)
 
 ## Funktionen
 
