@@ -137,11 +137,11 @@ public sealed class DeviceItemViewModel : ObservableObject
             if (HasError)
                 return StatusSeverity.Error;
 
-            return IsOn && BatteryPercent is { } percent && percent < LowBatteryPercent
-                ? StatusSeverity.Warning
-                : StatusSeverity.Normal;
+            return IsBatteryLow ? StatusSeverity.Warning : StatusSeverity.Normal;
         }
     }
+
+    public bool IsBatteryLow => IsOn && BatteryPercent is { } percent && percent < LowBatteryPercent;
 
     public string StatusText
     {

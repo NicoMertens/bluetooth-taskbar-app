@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Nc2.BluetoothTaskbarApp.Alerts;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
 using Nc2.BluetoothTaskbarApp.Tray;
@@ -30,6 +31,7 @@ public partial class App : Application
     private UpdateService? _updates;
     private DispatcherTimer? _updateTimer;
     private MenuItem? _updateMenuItem;
+    private LowBatteryAlerts? _batteryAlerts;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -67,6 +69,9 @@ public partial class App : Application
         _detailsTimer.Start();
 
         _ = _viewModel.RefreshDetailsAsync();
+
+        _batteryAlerts = new LowBatteryAlerts(_viewModel, Dispatcher);
+        _batteryAlerts.Start();
 
         _updates = new UpdateService();
         _updates.UpdateReady += _ => Dispatcher.InvokeAsync(ShowUpdateMenuItem);
@@ -172,6 +177,7 @@ public partial class App : Application
     {
         _detailsTimer?.Stop();
         _updateTimer?.Stop();
+        _batteryAlerts?.Dispose();
         _updates?.ApplyOnExit(restart: false);
         _tray?.Dispose();
         _viewModel?.Dispose();

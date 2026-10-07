@@ -1,0 +1,90 @@
+<Window x:Class="Nc2.BluetoothTaskbarApp.Views.BatteryAlertWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:Nc2.BluetoothTaskbarApp.Views"
+        Title="Low battery"
+        Width="320"
+        SizeToContent="Height"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Focusable="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
+        FontFamily="{StaticResource UiFont}"
+        Foreground="{StaticResource TextBrush}"
+        Cursor="Hand">
+
+    <Window.Resources>
+        <views:DeviceKindToGeometryConverter x:Key="KindToIcon" />
+        <views:BatteryPercentToGlyphConverter x:Key="BatteryToGlyph" />
+    </Window.Resources>
+
+    <!-- Margin leaves room for the drop shadow; the border is the visible surface. -->
+    <Border Margin="12"
+            Background="{StaticResource SurfaceBrush}"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="18" ShadowDepth="3" Direction="270" Opacity="0.45" Color="#000000" />
+        </Border.Effect>
+
+        <StackPanel Margin="0,0,0,6">
+            <TextBlock Text="Low battery"
+                       Margin="14,11,14,9"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource WarningBrush}" />
+
+            <Border Height="1" Background="{StaticResource SeparatorBrush}" />
+
+            <ItemsControl x:Name="DeviceList" Margin="0,4,0,0" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="14,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Path Grid.Column="0"
+                                  Width="20" Height="20"
+                                  Margin="0,0,11,0"
+                                  VerticalAlignment="Center"
+                                  Stretch="Uniform"
+                                  Data="{Binding Kind, Converter={StaticResource KindToIcon}}"
+                                  Fill="{StaticResource AccentBrush}" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Name}"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        TextElement.Foreground="{StaticResource WarningBrush}">
+                                <TextBlock Text="{Binding Percent, StringFormat={}{0}%}"
+                                           FontSize="15"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Percent, Converter={StaticResource BatteryToGlyph}}"
+                                           FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                           FontSize="20"
+                                           Margin="6,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</Window>

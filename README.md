@@ -12,6 +12,9 @@ Fußzeile mit Verweis in die Systemeinstellungen.
 - Gekoppelte Geräte mit Live-Aktualisierung
 - Verbinden und Trennen per Schalter
 - Akkustand für Geräte, die ihn melden; unter 30 % orange hervorgehoben
+- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät unter 30 %, erscheint alle drei
+  Minuten für 15 Sekunden ein Hinweis unten rechts, begleitet vom Windows-Ton für
+  schwachen Akku. Der Hinweis landet nicht in der Mitteilungszentrale.
 - Tray-Icon mit der Anzahl verbundener Geräte; folgt dem hellen bzw. dunklen Taskbar-Theme
 - Kontextmenü (Rechtsklick): Refresh, Bluetooth settings, Exit
 
