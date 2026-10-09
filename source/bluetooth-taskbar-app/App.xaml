@@ -5,6 +5,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- Palette first; SystemTheme swaps it for BreezeLight.xaml in light mode. -->
+                <ResourceDictionary Source="Themes/BreezeDark.xaml" />
                 <ResourceDictionary Source="Themes/Breeze.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

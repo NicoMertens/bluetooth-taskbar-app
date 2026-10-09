@@ -1,6 +1,7 @@
 using System.Windows.Interop;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
+using Nc2.BluetoothTaskbarApp.Themes;
 
 namespace Nc2.BluetoothTaskbarApp.Tray;
 
@@ -28,6 +29,9 @@ internal sealed class TrayIcon : IDisposable
 
     /// <summary>Right click; the argument is the screen position to show a menu at.</summary>
     public event Action<NativeMethods.POINT>? ContextMenuRequested;
+
+    /// <summary>Windows switched between light and dark mode; raised before the glyph redraws.</summary>
+    public event Action? SystemThemeChanged;
 
     public TrayIcon()
     {
@@ -153,6 +157,7 @@ internal sealed class TrayIcon : IDisposable
             && lParam != IntPtr.Zero
             && System.Runtime.InteropServices.Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet")
         {
+            SystemThemeChanged?.Invoke();
             UpdateIcon();
             return IntPtr.Zero;
         }

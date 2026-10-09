@@ -10,7 +10,7 @@ namespace Nc2.BluetoothTaskbarApp.Views;
 /// <summary>One line of the low-battery popup.</summary>
 public sealed record LowBatteryEntry(string Name, DeviceKind Kind, int Percent)
 {
-    public BatteryLevel Level => BatteryPalette.LevelOf(Percent);
+    public BatteryLevel BatteryLevel => BatteryLevels.FromPercent(Percent);
 }
 
 /// <summary>
@@ -47,7 +47,7 @@ public partial class BatteryAlertWindow : Window
     public void ShowAlert(IReadOnlyList<LowBatteryEntry> entries)
     {
         DeviceList.ItemsSource = entries;
-        Heading.Foreground = BatteryLevelToBrushConverter.BrushFor(entries.Max(e => e.Level));
+        Heading.SetResourceReference(ForegroundProperty, BatteryLevels.BrushKey(entries.Max(e => e.BatteryLevel)));
 
         BeginAnimation(OpacityProperty, null);
         Opacity = 0;

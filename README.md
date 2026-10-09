@@ -2,17 +2,21 @@
 
 Ein leichtgewichtiges Tray-Applet für Windows 11, das die Bluetooth-Schnellein­stellungen
 ersetzt. Optik und Bedienung orientieren sich am Bluetooth-Widget von KDE Plasma
-(Breeze Dark): Kopfzeile, flache Geräteliste mit Verbinden-Schalter und Akkustand,
+(Breeze Dark bzw. Breeze Light): Kopfzeile, flache Geräteliste mit Verbinden-Schalter und Akkustand,
 Fußzeile mit Verweis in die Systemeinstellungen.
 
-![Flyout mit gekoppelten Geräten](docs/screenshot.png)
+<p>
+  <img src="docs/screenshot-dark.png" alt="Flyout mit gekoppelten Geräten, dunkles Design" width="340">
+  <img src="docs/screenshot-light.png" alt="Flyout mit gekoppelten Geräten, helles Design" width="340">
+</p>
 
 ## Funktionen
 
 - Gekoppelte Geräte mit Live-Aktualisierung
 - Verbinden und Trennen per Schalter
-- Akkustand für Geräte, die ihn melden, farbig nach Stufe: weiß, bis 30 % gelb, bis 20 % orange,
-  bis 10 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
+- Helles und dunkles Design, folgt dem Windows-Modus und wechselt live mit
+- Akkustand für Geräte, die ihn melden, farbig nach Stufe: normal (weiß bzw. im hellen Design
+  dunkel), bis 30 % gelb, bis 20 % orange, bis 10 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
 - Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät bei 30 % oder darunter, erscheint alle drei
   Minuten für 15 Sekunden ein Hinweis unten rechts, begleitet vom Windows-Ton für
   schwachen Akku. Der Hinweis landet nicht in der Mitteilungszentrale.
@@ -52,7 +56,6 @@ Beenden eingespielt.
 - Bei ungewöhnlichen Geräten kann das Verbinden fehlschlagen; die Zeile zeigt dann
   kurz den Fehler.
 - Die Liste zeigt nur gekoppelte Geräte.
-- Das Flyout gibt es nur in Dark Mode.
 
 Die Gründe stehen in [docs/verbindungen.md](docs/verbindungen.md).
 

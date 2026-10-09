@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Breeze Dark palette (KDE Plasma). Same keys as BreezeLight.xaml. -->
+
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#2A2E32" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#3F4449" />
+    <SolidColorBrush x:Key="SeparatorBrush" Color="#383D42" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#353A40" />
+    <SolidColorBrush x:Key="PressedBrush" Color="#2F343A" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#FCFCFC" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#9BA1A7" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#3DAEE9" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#53BDF0" />
+    <SolidColorBrush x:Key="NegativeBrush" Color="#DA4453" />
+
+    <SolidColorBrush x:Key="TrackOffBrush" Color="#4D5257" />
+    <SolidColorBrush x:Key="ThumbOffBrush" Color="#BDC3C7" />
+    <SolidColorBrush x:Key="ThumbOnBrush" Color="#FCFCFC" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#565C62" />
+
+    <!-- Battery bands; a normal charge uses TextBrush. -->
+    <SolidColorBrush x:Key="BatteryLowBrush" Color="#FDD835" />
+    <SolidColorBrush x:Key="BatteryVeryLowBrush" Color="#F67400" />
+    <SolidColorBrush x:Key="BatteryCriticalBrush" Color="#DA4453" />
+
+</ResourceDictionary>

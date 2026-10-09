@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using Nc2.BluetoothTaskbarApp.Alerts;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
+using Nc2.BluetoothTaskbarApp.Themes;
 using Nc2.BluetoothTaskbarApp.Tray;
 using Nc2.BluetoothTaskbarApp.Updates;
 using Nc2.BluetoothTaskbarApp.ViewModels;
@@ -47,6 +48,8 @@ public partial class App : Application
             return;
         }
 
+        SystemTheme.Apply(this);
+
         _monitor = new BluetoothMonitor();
         _radio = new RadioMonitor();
         _controller = new ConnectionController();
@@ -56,6 +59,7 @@ public partial class App : Application
         _tray = new TrayIcon();
         _tray.Activated += () => _window.Toggle();
         _tray.ContextMenuRequested += ShowTrayMenu;
+        _tray.SystemThemeChanged += () => SystemTheme.Apply(this);
 
         _viewModel.DeviceStateChanged += UpdateTray;
 

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
+using Nc2.BluetoothTaskbarApp.Themes;
 
 namespace Nc2.BluetoothTaskbarApp.Tray;
 
@@ -49,7 +50,7 @@ internal static class IconRenderer
     public static IntPtr CreateTrayIcon(int connectedCount, BatteryLevel battery)
     {
         int size = Math.Max(16, NativeMethods.GetSystemMetrics(NativeMethods.SM_CXSMICON));
-        return CreateHIcon(RenderBitmap(size, connectedCount, battery, SystemTheme.IsLightTaskbar()), size);
+        return CreateHIcon(RenderBitmap(size, connectedCount, battery, SystemTheme.IsLight()), size);
     }
 
     /// <summary>The drawing half, kept separate from the HICON plumbing so it can be inspected.</summary>
@@ -70,7 +71,12 @@ internal static class IconRenderer
 
     private static void Draw(DrawingContext dc, double size, int connectedCount, BatteryLevel battery, bool lightTaskbar)
     {
-        Color glyphColor = BatteryPalette.ColorOf(battery, lightTaskbar) ?? (lightTaskbar ? GlyphOnLight : GlyphOnDark);
+        // The palette follows the same Windows mode as the taskbar, so its battery
+        // colours already suit the taskbar background.
+        Color glyphColor = battery != BatteryLevel.Normal
+            && Application.Current?.TryFindResource(BatteryLevels.BrushKey(battery)) is SolidColorBrush tint
+                ? tint.Color
+                : lightTaskbar ? GlyphOnLight : GlyphOnDark;
         var glyphBrush = new SolidColorBrush(glyphColor);
         Rect glyphInk = Glyph.Bounds;
 

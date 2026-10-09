@@ -2,13 +2,6 @@ using Nc2.BluetoothTaskbarApp.Bluetooth;
 
 namespace Nc2.BluetoothTaskbarApp.ViewModels;
 
-/// <summary>How prominently a row's status line should read.</summary>
-public enum StatusSeverity
-{
-    Normal,
-    Error,
-}
-
 /// <summary>One row in the flyout: a paired device and its connect toggle.</summary>
 public sealed class DeviceItemViewModel : ObservableObject
 {
@@ -122,12 +115,9 @@ public sealed class DeviceItemViewModel : ObservableObject
 
     public bool HasError => Error is not null;
 
-    /// <summary>Colour cue for the status line; the battery carries its own colour.</summary>
-    public StatusSeverity Severity => HasError ? StatusSeverity.Error : StatusSeverity.Normal;
-
     /// <summary>Only a connected device's reading is current, so only that one is banded.</summary>
     public BatteryLevel BatteryLevel =>
-        IsOn && BatteryPercent is { } percent ? BatteryPalette.LevelOf(percent) : BatteryLevel.Normal;
+        IsOn && BatteryPercent is { } percent ? BatteryLevels.FromPercent(percent) : BatteryLevel.Normal;
 
     public bool IsBatteryLow => BatteryLevel != BatteryLevel.Normal;
 
@@ -185,7 +175,6 @@ public sealed class DeviceItemViewModel : ObservableObject
     private void RaiseRowState()
     {
         Raise(nameof(StatusText));
-        Raise(nameof(Severity));
         Raise(nameof(BatteryLevel));
         Raise(nameof(IsBatteryLow));
         Raise(nameof(IsBatteryVisible));
