@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
 
 namespace Nc2.BluetoothTaskbarApp.Tray;
@@ -41,23 +42,24 @@ internal static class IconRenderer
     }
 
     /// <summary>
-    /// Draws the Bluetooth glyph, plus a badge with the number of connected
-    /// devices when there is at least one. Caller owns the handle (DestroyIcon).
+    /// Draws the Bluetooth glyph, tinted by the weakest connected battery, plus a
+    /// badge with the number of connected devices when there is at least one.
+    /// Caller owns the handle (DestroyIcon).
     /// </summary>
-    public static IntPtr CreateTrayIcon(int connectedCount)
+    public static IntPtr CreateTrayIcon(int connectedCount, BatteryLevel battery)
     {
         int size = Math.Max(16, NativeMethods.GetSystemMetrics(NativeMethods.SM_CXSMICON));
-        return CreateHIcon(RenderBitmap(size, connectedCount, SystemTheme.IsLightTaskbar()), size);
+        return CreateHIcon(RenderBitmap(size, connectedCount, battery, SystemTheme.IsLightTaskbar()), size);
     }
 
     /// <summary>The drawing half, kept separate from the HICON plumbing so it can be inspected.</summary>
-    internal static BitmapSource RenderBitmap(int size, int connectedCount, bool lightTaskbar)
+    internal static BitmapSource RenderBitmap(int size, int connectedCount, BatteryLevel battery, bool lightTaskbar)
     {
         int large = size * Supersample;
 
         var visual = new DrawingVisual();
         using (DrawingContext dc = visual.RenderOpen())
-            Draw(dc, large, connectedCount, lightTaskbar);
+            Draw(dc, large, connectedCount, battery, lightTaskbar);
 
         var hiRes = new RenderTargetBitmap(large, large, 96, 96, PixelFormats.Pbgra32);
         hiRes.Render(visual);
@@ -66,9 +68,10 @@ internal static class IconRenderer
         return Downsample(hiRes, size);
     }
 
-    private static void Draw(DrawingContext dc, double size, int connectedCount, bool lightTaskbar)
+    private static void Draw(DrawingContext dc, double size, int connectedCount, BatteryLevel battery, bool lightTaskbar)
     {
-        var glyphBrush = new SolidColorBrush(lightTaskbar ? GlyphOnLight : GlyphOnDark);
+        Color glyphColor = BatteryPalette.ColorOf(battery, lightTaskbar) ?? (lightTaskbar ? GlyphOnLight : GlyphOnDark);
+        var glyphBrush = new SolidColorBrush(glyphColor);
         Rect glyphInk = Glyph.Bounds;
 
         if (connectedCount <= 0)

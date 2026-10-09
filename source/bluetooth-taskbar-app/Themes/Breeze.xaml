@@ -16,7 +16,6 @@
     <SolidColorBrush x:Key="AccentBrush" Color="#3DAEE9" />
     <SolidColorBrush x:Key="AccentHoverBrush" Color="#53BDF0" />
     <SolidColorBrush x:Key="NegativeBrush" Color="#DA4453" />
-    <SolidColorBrush x:Key="WarningBrush" Color="#F67400" />
 
     <SolidColorBrush x:Key="TrackOffBrush" Color="#4D5257" />
     <SolidColorBrush x:Key="ThumbOffBrush" Color="#BDC3C7" />

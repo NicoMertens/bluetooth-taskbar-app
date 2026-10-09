@@ -77,11 +77,37 @@ public sealed class StatusSeverityToBrushConverter : IValueConverter
         string key = value switch
         {
             StatusSeverity.Error => "NegativeBrush",
-            StatusSeverity.Warning => "WarningBrush",
             _ => "SubtleTextBrush",
         };
 
         return Application.Current.TryFindResource(key) as Brush ?? Brushes.Gray;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+}
+
+/// <summary>Colours a battery reading by its band; a healthy one uses the normal text colour.</summary>
+public sealed class BatteryLevelToBrushConverter : IValueConverter
+{
+    private static readonly Dictionary<BatteryLevel, Brush> Cache = [];
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => BrushFor(value is BatteryLevel level ? level : BatteryLevel.Normal);
+
+    public static Brush BrushFor(BatteryLevel level)
+    {
+        if (BatteryPalette.ColorOf(level) is not { } color)
+            return Application.Current.TryFindResource("TextBrush") as Brush ?? Brushes.White;
+
+        if (!Cache.TryGetValue(level, out Brush? brush))
+        {
+            brush = new SolidColorBrush(color);
+            brush.Freeze();
+            Cache[level] = brush;
+        }
+
+        return brush;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

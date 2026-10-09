@@ -21,6 +21,7 @@
         <views:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <views:StatusSeverityToBrushConverter x:Key="SeverityToBrush" />
         <views:BatteryPercentToGlyphConverter x:Key="BatteryToGlyph" />
+        <views:BatteryLevelToBrushConverter x:Key="BatteryLevelToBrush" />
     </Window.Resources>
 
     <!-- Margin leaves room for the drop shadow; the border is the visible surface. -->
@@ -126,7 +127,7 @@
                                                 Margin="12,0,0,0"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center"
-                                                TextElement.Foreground="{Binding Severity, Converter={StaticResource SeverityToBrush}}"
+                                                TextElement.Foreground="{Binding BatteryLevel, Converter={StaticResource BatteryLevelToBrush}}"
                                                 Visibility="{Binding IsBatteryVisible,
                                                              Converter={StaticResource BoolToVisibility}}">
                                         <TextBlock Text="{Binding BatteryPercent, StringFormat={}{0}%}"

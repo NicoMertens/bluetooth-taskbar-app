@@ -11,11 +11,12 @@ Fußzeile mit Verweis in die Systemeinstellungen.
 
 - Gekoppelte Geräte mit Live-Aktualisierung
 - Verbinden und Trennen per Schalter
-- Akkustand für Geräte, die ihn melden; unter 30 % orange hervorgehoben
-- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät unter 30 %, erscheint alle drei
+- Akkustand für Geräte, die ihn melden, farbig nach Stufe: weiß, bis 30 % gelb, bis 20 % orange,
+  bis 10 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
+- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät bei 30 % oder darunter, erscheint alle drei
   Minuten für 15 Sekunden ein Hinweis unten rechts, begleitet vom Windows-Ton für
   schwachen Akku. Der Hinweis landet nicht in der Mitteilungszentrale.
-- Tray-Icon mit der Anzahl verbundener Geräte; folgt dem hellen bzw. dunklen Taskbar-Theme
+- Tray-Icon mit der Anzahl verbundener Geräte, eingefärbt nach dem schwächsten Akku; folgt dem hellen bzw. dunklen Taskbar-Theme
 - Kontextmenü (Rechtsklick): Refresh, Bluetooth settings, Exit
 
 Bewusst **nicht** enthalten: Adapter ein-/ausschalten sowie Suchen und Koppeln

@@ -22,6 +22,7 @@
     <Window.Resources>
         <views:DeviceKindToGeometryConverter x:Key="KindToIcon" />
         <views:BatteryPercentToGlyphConverter x:Key="BatteryToGlyph" />
+        <views:BatteryLevelToBrushConverter x:Key="BatteryLevelToBrush" />
     </Window.Resources>
 
     <!-- Margin leaves room for the drop shadow; the border is the visible surface. -->
@@ -35,11 +36,11 @@
         </Border.Effect>
 
         <StackPanel Margin="0,0,0,6">
-            <TextBlock Text="Low battery"
+            <TextBlock x:Name="Heading"
+                       Text="Low battery"
                        Margin="14,11,14,9"
                        FontSize="14"
-                       FontWeight="SemiBold"
-                       Foreground="{StaticResource WarningBrush}" />
+                       FontWeight="SemiBold" />
 
             <Border Height="1" Background="{StaticResource SeparatorBrush}" />
 
@@ -71,7 +72,7 @@
                                         Orientation="Horizontal"
                                         Margin="12,0,0,0"
                                         VerticalAlignment="Center"
-                                        TextElement.Foreground="{StaticResource WarningBrush}">
+                                        TextElement.Foreground="{Binding Level, Converter={StaticResource BatteryLevelToBrush}}">
                                 <TextBlock Text="{Binding Percent, StringFormat={}{0}%}"
                                            FontSize="15"
                                            VerticalAlignment="Center" />

@@ -57,7 +57,7 @@ public partial class App : Application
         _tray.Activated += () => _window.Toggle();
         _tray.ContextMenuRequested += ShowTrayMenu;
 
-        _viewModel.ConnectionStateChanged += UpdateTray;
+        _viewModel.DeviceStateChanged += UpdateTray;
 
         _monitor.Start();
 
@@ -96,13 +96,14 @@ public partial class App : Application
 
         if (!_viewModel.IsRadioOn)
         {
-            _tray.Update(0, "Bluetooth is off");
+            _tray.Update(0, BatteryLevel.Normal, "Bluetooth is off");
             return;
         }
 
         int connected = _viewModel.Devices.Count(d => d.IsOn);
+        BatteryLevel weakest = _viewModel.Devices.Select(d => d.BatteryLevel).DefaultIfEmpty().Max();
 
-        _tray.Update(connected, connected switch
+        _tray.Update(connected, weakest, connected switch
         {
             0 => "Bluetooth – no devices connected",
             1 => "Bluetooth – 1 device connected",
