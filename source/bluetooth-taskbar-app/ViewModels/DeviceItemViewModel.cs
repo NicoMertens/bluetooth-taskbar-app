@@ -2,20 +2,9 @@ using Nc2.BluetoothTaskbarApp.Bluetooth;
 
 namespace Nc2.BluetoothTaskbarApp.ViewModels;
 
-/// <summary>How prominently a row's status line should read.</summary>
-public enum StatusSeverity
-{
-    Normal,
-    Warning,
-    Error,
-}
-
 /// <summary>One row in the flyout: a paired device and its connect toggle.</summary>
 public sealed class DeviceItemViewModel : ObservableObject
 {
-    /// <summary>At or below this the battery reading is called out in warning colour.</summary>
-    private const int LowBatteryPercent = 30;
-
     private readonly Func<DeviceItemViewModel, bool, Task> _onToggleRequested;
 
     private bool _isOn;
@@ -126,22 +115,11 @@ public sealed class DeviceItemViewModel : ObservableObject
 
     public bool HasError => Error is not null;
 
-    /// <summary>
-    /// Colour cue for the status line: a failure outranks everything, otherwise a
-    /// low battery on a connected device is worth flagging.
-    /// </summary>
-    public StatusSeverity Severity
-    {
-        get
-        {
-            if (HasError)
-                return StatusSeverity.Error;
+    /// <summary>Only a connected device's reading is current, so only that one is banded.</summary>
+    public BatteryLevel BatteryLevel =>
+        IsOn && BatteryPercent is { } percent ? BatteryLevels.FromPercent(percent) : BatteryLevel.Normal;
 
-            return IsBatteryLow ? StatusSeverity.Warning : StatusSeverity.Normal;
-        }
-    }
-
-    public bool IsBatteryLow => IsOn && BatteryPercent is { } percent && percent < LowBatteryPercent;
+    public bool IsBatteryLow => BatteryLevel != BatteryLevel.Normal;
 
     public string StatusText
     {
@@ -197,7 +175,8 @@ public sealed class DeviceItemViewModel : ObservableObject
     private void RaiseRowState()
     {
         Raise(nameof(StatusText));
-        Raise(nameof(Severity));
+        Raise(nameof(BatteryLevel));
+        Raise(nameof(IsBatteryLow));
         Raise(nameof(IsBatteryVisible));
         Raise(nameof(IsToggleEnabled));
         Raise(nameof(IsToggleVisible));

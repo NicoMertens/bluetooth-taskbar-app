@@ -68,12 +68,14 @@ public sealed class FlyoutViewModel : ObservableObject, IDisposable
 
     public bool ShowMessage => !ShowDeviceList;
 
+    public string VersionText { get; } = $"v{typeof(FlyoutViewModel).Assembly.GetName().Version?.ToString(3)}";
+
     public string MessageText => IsRadioOn ? "No paired devices" : "Bluetooth is off";
 
     /// <summary>True once at least one device is connected — drives the tray icon.</summary>
     public bool AnyConnected => Devices.Any(d => d.IsOn);
 
-    public event Action? ConnectionStateChanged;
+    public event Action? DeviceStateChanged;
 
     private void OnMonitorChanged()
     {
@@ -142,7 +144,7 @@ public sealed class FlyoutViewModel : ObservableObject, IDisposable
             Devices.RemoveAt(Devices.Count - 1);
 
         RaiseListState();
-        ConnectionStateChanged?.Invoke();
+        DeviceStateChanged?.Invoke();
 
         // A device the watcher just reported has no probed detail yet. Without this
         // the first rows would sit there with no battery level and no held state
@@ -188,6 +190,8 @@ public sealed class FlyoutViewModel : ObservableObject, IDisposable
 
                 foreach (DeviceItemViewModel item in Devices)
                     item.Apply(item.Model);
+
+                DeviceStateChanged?.Invoke();
             }
             while (_refreshRequestedAgain);
         }
@@ -233,7 +237,7 @@ public sealed class FlyoutViewModel : ObservableObject, IDisposable
         {
             item.IsBusy = false;
             Raise(nameof(AnyConnected));
-            ConnectionStateChanged?.Invoke();
+            DeviceStateChanged?.Invoke();
         }
 
         // Battery becomes readable once a device is actually up.

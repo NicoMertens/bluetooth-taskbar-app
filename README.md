@@ -2,20 +2,25 @@
 
 Ein leichtgewichtiges Tray-Applet für Windows 11, das die Bluetooth-Schnellein­stellungen
 ersetzt. Optik und Bedienung orientieren sich am Bluetooth-Widget von KDE Plasma
-(Breeze Dark): Kopfzeile, flache Geräteliste mit Verbinden-Schalter und Akkustand,
+(Breeze Dark bzw. Breeze Light): Kopfzeile, flache Geräteliste mit Verbinden-Schalter und Akkustand,
 Fußzeile mit Verweis in die Systemeinstellungen.
 
-![Flyout mit gekoppelten Geräten](docs/screenshot.png)
+<p>
+  <img src="docs/screenshot-dark.png" alt="Flyout mit gekoppelten Geräten, dunkles Design" width="340">
+  <img src="docs/screenshot-light.png" alt="Flyout mit gekoppelten Geräten, helles Design" width="340">
+</p>
 
 ## Funktionen
 
 - Gekoppelte Geräte mit Live-Aktualisierung
 - Verbinden und Trennen per Schalter
-- Akkustand für Geräte, die ihn melden; unter 30 % orange hervorgehoben
-- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät unter 30 %, erscheint alle drei
+- Helles und dunkles Design, folgt dem Windows-Modus und wechselt live mit
+- Akkustand für Geräte, die ihn melden, farbig nach Stufe: normal (weiß bzw. im hellen Design
+  dunkel), bis 30 % gelb, bis 20 % orange, bis 10 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
+- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät bei 30 % oder darunter, erscheint alle drei
   Minuten für 15 Sekunden ein Hinweis unten rechts, begleitet vom Windows-Ton für
   schwachen Akku. Der Hinweis landet nicht in der Mitteilungszentrale.
-- Tray-Icon mit der Anzahl verbundener Geräte; folgt dem hellen bzw. dunklen Taskbar-Theme
+- Tray-Icon mit der Anzahl verbundener Geräte, eingefärbt nach dem schwächsten Akku; folgt dem hellen bzw. dunklen Taskbar-Theme
 - Kontextmenü (Rechtsklick): Refresh, Bluetooth settings, Exit
 
 Bewusst **nicht** enthalten: Adapter ein-/ausschalten sowie Suchen und Koppeln
@@ -51,7 +56,6 @@ Beenden eingespielt.
 - Bei ungewöhnlichen Geräten kann das Verbinden fehlschlagen; die Zeile zeigt dann
   kurz den Fehler.
 - Die Liste zeigt nur gekoppelte Geräte.
-- Das Flyout gibt es nur in Dark Mode.
 
 Die Gründe stehen in [docs/verbindungen.md](docs/verbindungen.md).
 
@@ -72,16 +76,32 @@ nicht nach Updates.
 Entwickelt wird auf `develop`. Der Branch `release` enthält immer den Stand der
 zuletzt veröffentlichten Version.
 
-Für ein Release auf `develop` die `<Version>` in `source/Directory.Build.props`
-erhöhen und `develop` nach `release` mergen. GitHub Actions baut daraufhin Setup und
-Update-Pakete, erzeugt den Tag `vX.Y.Z` und veröffentlicht das Release. Gibt es die
-Version schon, bricht der Workflow ab, ohne etwas zu veröffentlichen.
+Jeder Push auf `release` veröffentlicht die `<Version>` aus
+`source/Directory.Build.props`: GitHub Actions baut Setup und Update-Pakete, erzeugt
+den Tag `vX.Y.Z` und veröffentlicht das Release. Gibt es die Version schon, bricht der
+Workflow ab, ohne etwas zu veröffentlichen.
+
+**Versionsschema:** `develop` trägt immer schon die nächste Minor-Version.
+
+- **Release:** `develop` per Merge-Commit nach `release` mergen. Direkt danach auf
+  `develop` die Minor-Version erhöhen (z. B. 1.2.0 → 1.3.0).
+- **Hotfix:** direkt auf `release` korrigieren und dabei die Patch-Version erhöhen
+  (z. B. 1.2.0 → 1.2.1). Danach `release` zurück nach `develop` mergen, die Version
+  von `develop` aber behalten — beim Konflikt in `Directory.Build.props` gewinnt
+  `develop`.
 
 ```powershell
+# Release
 git switch release
-git merge --ff-only develop
+git merge --no-ff develop -m "Release 1.2.0"
 git push
 git switch develop
+# <Version> auf 1.3.0 setzen, committen, pushen
+
+# Hotfix zurückholen
+git switch develop
+git merge --no-ff release
+# Konflikt in source/Directory.Build.props: Version von develop behalten
 ```
 
 Technische Hintergründe: [docs/architektur.md](docs/architektur.md).

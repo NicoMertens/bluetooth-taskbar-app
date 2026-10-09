@@ -1,5 +1,7 @@
 using System.Windows.Interop;
+using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
+using Nc2.BluetoothTaskbarApp.Themes;
 
 namespace Nc2.BluetoothTaskbarApp.Tray;
 
@@ -18,6 +20,7 @@ internal sealed class TrayIcon : IDisposable
     private IntPtr _currentIcon = IntPtr.Zero;
     private bool _added;
     private int _connectedCount;
+    private BatteryLevel _battery;
     private string _tooltip = "Bluetooth";
     private bool _disposed;
 
@@ -26,6 +29,9 @@ internal sealed class TrayIcon : IDisposable
 
     /// <summary>Right click; the argument is the screen position to show a menu at.</summary>
     public event Action<NativeMethods.POINT>? ContextMenuRequested;
+
+    /// <summary>Windows switched between light and dark mode; raised before the glyph redraws.</summary>
+    public event Action? SystemThemeChanged;
 
     public TrayIcon()
     {
@@ -51,22 +57,23 @@ internal sealed class TrayIcon : IDisposable
     public IntPtr Handle => _source.Handle;
 
     /// <summary>
-    /// Sets the badge count and tooltip together, so a state change costs one
-    /// redraw rather than two.
+    /// Sets badge count, battery tint and tooltip together, so a state change
+    /// costs one redraw rather than several.
     /// </summary>
-    public void Update(int connectedCount, string tooltip)
+    public void Update(int connectedCount, BatteryLevel battery, string tooltip)
     {
-        if (_connectedCount == connectedCount && _tooltip == tooltip && _added)
+        if (_connectedCount == connectedCount && _battery == battery && _tooltip == tooltip && _added)
             return;
 
         _connectedCount = connectedCount;
+        _battery = battery;
         _tooltip = tooltip;
         UpdateIcon();
     }
 
     private void Add()
     {
-        IntPtr icon = IconRenderer.CreateTrayIcon(_connectedCount);
+        IntPtr icon = IconRenderer.CreateTrayIcon(_connectedCount, _battery);
 
         NativeMethods.NOTIFYICONDATA data = CreateData(icon);
 
@@ -103,7 +110,7 @@ internal sealed class TrayIcon : IDisposable
             return;
         }
 
-        IntPtr icon = IconRenderer.CreateTrayIcon(_connectedCount);
+        IntPtr icon = IconRenderer.CreateTrayIcon(_connectedCount, _battery);
         NativeMethods.NOTIFYICONDATA data = CreateData(icon);
 
         if (NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_MODIFY, ref data))
@@ -150,6 +157,7 @@ internal sealed class TrayIcon : IDisposable
             && lParam != IntPtr.Zero
             && System.Runtime.InteropServices.Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet")
         {
+            SystemThemeChanged?.Invoke();
             UpdateIcon();
             return IntPtr.Zero;
         }

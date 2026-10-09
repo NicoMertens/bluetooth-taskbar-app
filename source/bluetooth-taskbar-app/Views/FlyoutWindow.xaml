@@ -14,19 +14,18 @@
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
         FontFamily="{StaticResource UiFont}"
-        Foreground="{StaticResource TextBrush}">
+        Foreground="{DynamicResource TextBrush}">
 
     <Window.Resources>
         <views:DeviceKindToGeometryConverter x:Key="KindToIcon" />
         <views:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-        <views:StatusSeverityToBrushConverter x:Key="SeverityToBrush" />
         <views:BatteryPercentToGlyphConverter x:Key="BatteryToGlyph" />
     </Window.Resources>
 
     <!-- Margin leaves room for the drop shadow; the border is the visible surface. -->
     <Border Margin="12"
-            Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1"
             CornerRadius="8">
         <Border.Effect>
@@ -47,7 +46,7 @@
                 <TextBlock Text="Bluetooth"
                            FontSize="14"
                            FontWeight="SemiBold"
-                           Foreground="{StaticResource TextBrush}"
+                           Foreground="{DynamicResource TextBrush}"
                            VerticalAlignment="Center" />
 
                 <Button Style="{StaticResource IconButton}"
@@ -61,7 +60,7 @@
                 </Button>
             </Grid>
 
-            <Border Grid.Row="1" Height="1" Background="{StaticResource SeparatorBrush}" />
+            <Border Grid.Row="1" Height="1" Background="{DynamicResource SeparatorBrush}" />
 
             <!-- ============ Device list ============ -->
             <ScrollViewer Grid.Row="2"
@@ -98,18 +97,28 @@
                                           VerticalAlignment="Center"
                                           Stretch="Uniform"
                                           Data="{Binding Kind, Converter={StaticResource KindToIcon}}"
-                                          Fill="{StaticResource SubtleTextBrush}" />
+                                          Fill="{DynamicResource SubtleTextBrush}" />
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Name}"
                                                    FontSize="13"
-                                                   Foreground="{StaticResource TextBrush}"
+                                                   Foreground="{DynamicResource TextBrush}"
                                                    TextTrimming="CharacterEllipsis" />
                                         <TextBlock Text="{Binding StatusText}"
                                                    FontSize="11"
                                                    Margin="0,1,0,0"
-                                                   Foreground="{Binding Severity, Converter={StaticResource SeverityToBrush}}"
-                                                   TextTrimming="CharacterEllipsis" />
+                                                   TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{DynamicResource SubtleTextBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasError}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource NegativeBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </StackPanel>
 
                                     <ToggleButton Grid.Column="2"
@@ -122,11 +131,10 @@
                                                                Converter={StaticResource BoolToVisibility}}" />
 
                                     <StackPanel Grid.Column="3"
-                                                Orientation="Horizontal"
+                                                Style="{StaticResource BatteryReadout}"
                                                 Margin="12,0,0,0"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center"
-                                                TextElement.Foreground="{Binding Severity, Converter={StaticResource SeverityToBrush}}"
                                                 Visibility="{Binding IsBatteryVisible,
                                                              Converter={StaticResource BoolToVisibility}}">
                                         <TextBlock Text="{Binding BatteryPercent, StringFormat={}{0}%}"
@@ -143,10 +151,10 @@
 
                             <DataTemplate.Triggers>
                                 <Trigger SourceName="Row" Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Row" Property="Background" Value="{StaticResource HoverBrush}" />
+                                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource HoverBrush}" />
                                 </Trigger>
                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                    <Setter TargetName="DeviceIcon" Property="Fill" Value="{StaticResource AccentBrush}" />
+                                    <Setter TargetName="DeviceIcon" Property="Fill" Value="{DynamicResource AccentBrush}" />
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
@@ -161,7 +169,7 @@
                 <Path Width="28" Height="28"
                       Stretch="Uniform"
                       Opacity="0.4"
-                      Fill="{StaticResource SubtleTextBrush}"
+                      Fill="{DynamicResource SubtleTextBrush}"
                       HorizontalAlignment="Center">
                     <Path.Style>
                         <!-- Data lives in the style, not as an attribute: a local
@@ -180,29 +188,40 @@
                            Margin="0,10,0,0"
                            FontSize="12"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource SubtleTextBrush}" />
+                           Foreground="{DynamicResource SubtleTextBrush}" />
             </StackPanel>
 
-            <Border Grid.Row="3" Height="1" Background="{StaticResource SeparatorBrush}" />
+            <Border Grid.Row="3" Height="1" Background="{DynamicResource SeparatorBrush}" />
 
             <!-- ============ Footer ============ -->
-            <Button Grid.Row="4"
-                    Style="{StaticResource FooterButton}"
-                    Margin="6,5,6,6"
-                    Command="{Binding OpenSettingsCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <Path Data="{StaticResource Icon.Settings}"
-                          Width="15" Height="15"
-                          Margin="2,0,10,0"
-                          Stretch="Uniform"
-                          VerticalAlignment="Center"
-                          Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
-                    <TextBlock Text="Configure Bluetooth…"
-                               FontSize="12.5"
-                               VerticalAlignment="Center"
-                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
-                </StackPanel>
-            </Button>
+            <Grid Grid.Row="4">
+                <Button Style="{StaticResource FooterButton}"
+                        Margin="6,5,6,6"
+                        Command="{Binding OpenSettingsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource Icon.Settings}"
+                              Width="15" Height="15"
+                              Margin="2,0,10,0"
+                              Stretch="Uniform"
+                              VerticalAlignment="Center"
+                              Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                        <TextBlock Text="Configure Bluetooth…"
+                                   FontSize="12.5"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Drawn over the button so the whole footer stays clickable. -->
+                <TextBlock Text="{Binding VersionText}"
+                           Margin="0,0,16,0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontSize="10.5"
+                           Opacity="0.7"
+                           IsHitTestVisible="False"
+                           Foreground="{DynamicResource SubtleTextBrush}" />
+            </Grid>
         </Grid>
     </Border>
 </Window>

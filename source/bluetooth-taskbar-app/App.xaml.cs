@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using Nc2.BluetoothTaskbarApp.Alerts;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
 using Nc2.BluetoothTaskbarApp.Interop;
+using Nc2.BluetoothTaskbarApp.Themes;
 using Nc2.BluetoothTaskbarApp.Tray;
 using Nc2.BluetoothTaskbarApp.Updates;
 using Nc2.BluetoothTaskbarApp.ViewModels;
@@ -47,6 +48,8 @@ public partial class App : Application
             return;
         }
 
+        SystemTheme.Apply(this);
+
         _monitor = new BluetoothMonitor();
         _radio = new RadioMonitor();
         _controller = new ConnectionController();
@@ -56,8 +59,9 @@ public partial class App : Application
         _tray = new TrayIcon();
         _tray.Activated += () => _window.Toggle();
         _tray.ContextMenuRequested += ShowTrayMenu;
+        _tray.SystemThemeChanged += () => SystemTheme.Apply(this);
 
-        _viewModel.ConnectionStateChanged += UpdateTray;
+        _viewModel.DeviceStateChanged += UpdateTray;
 
         _monitor.Start();
 
@@ -96,13 +100,14 @@ public partial class App : Application
 
         if (!_viewModel.IsRadioOn)
         {
-            _tray.Update(0, "Bluetooth is off");
+            _tray.Update(0, BatteryLevel.Normal, "Bluetooth is off");
             return;
         }
 
         int connected = _viewModel.Devices.Count(d => d.IsOn);
+        BatteryLevel weakest = _viewModel.Devices.Select(d => d.BatteryLevel).DefaultIfEmpty().Max();
 
-        _tray.Update(connected, connected switch
+        _tray.Update(connected, weakest, connected switch
         {
             0 => "Bluetooth – no devices connected",
             1 => "Bluetooth – 1 device connected",

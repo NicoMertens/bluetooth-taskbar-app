@@ -16,7 +16,7 @@
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
         FontFamily="{StaticResource UiFont}"
-        Foreground="{StaticResource TextBrush}"
+        Foreground="{DynamicResource TextBrush}"
         Cursor="Hand">
 
     <Window.Resources>
@@ -26,8 +26,8 @@
 
     <!-- Margin leaves room for the drop shadow; the border is the visible surface. -->
     <Border Margin="12"
-            Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1"
             CornerRadius="8">
         <Border.Effect>
@@ -35,13 +35,13 @@
         </Border.Effect>
 
         <StackPanel Margin="0,0,0,6">
-            <TextBlock Text="Low battery"
+            <TextBlock x:Name="Heading"
+                       Text="Low battery"
                        Margin="14,11,14,9"
                        FontSize="14"
-                       FontWeight="SemiBold"
-                       Foreground="{StaticResource WarningBrush}" />
+                       FontWeight="SemiBold" />
 
-            <Border Height="1" Background="{StaticResource SeparatorBrush}" />
+            <Border Height="1" Background="{DynamicResource SeparatorBrush}" />
 
             <ItemsControl x:Name="DeviceList" Margin="0,4,0,0" Focusable="False">
                 <ItemsControl.ItemTemplate>
@@ -59,7 +59,7 @@
                                   VerticalAlignment="Center"
                                   Stretch="Uniform"
                                   Data="{Binding Kind, Converter={StaticResource KindToIcon}}"
-                                  Fill="{StaticResource AccentBrush}" />
+                                  Fill="{DynamicResource AccentBrush}" />
 
                             <TextBlock Grid.Column="1"
                                        Text="{Binding Name}"
@@ -68,10 +68,9 @@
                                        TextTrimming="CharacterEllipsis" />
 
                             <StackPanel Grid.Column="2"
-                                        Orientation="Horizontal"
+                                        Style="{StaticResource BatteryReadout}"
                                         Margin="12,0,0,0"
-                                        VerticalAlignment="Center"
-                                        TextElement.Foreground="{StaticResource WarningBrush}">
+                                        VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Percent, StringFormat={}{0}%}"
                                            FontSize="15"
                                            VerticalAlignment="Center" />

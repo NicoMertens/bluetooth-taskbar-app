@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using Nc2.BluetoothTaskbarApp.Bluetooth;
-using Nc2.BluetoothTaskbarApp.ViewModels;
 
 namespace Nc2.BluetoothTaskbarApp.Views;
 
@@ -63,25 +62,6 @@ public sealed class BatteryPercentToGlyphConverter : IValueConverter
 
         // Battery0–Battery9 are contiguous at U+E850; the full glyph Battery10 lives elsewhere.
         return step == 10 ? "" : ((char)(0xE850 + step)).ToString();
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        => throw new NotSupportedException();
-}
-
-/// <summary>Picks the status-line colour for a row's severity.</summary>
-public sealed class StatusSeverityToBrushConverter : IValueConverter
-{
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        string key = value switch
-        {
-            StatusSeverity.Error => "NegativeBrush",
-            StatusSeverity.Warning => "WarningBrush",
-            _ => "SubtleTextBrush",
-        };
-
-        return Application.Current.TryFindResource(key) as Brush ?? Brushes.Gray;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
