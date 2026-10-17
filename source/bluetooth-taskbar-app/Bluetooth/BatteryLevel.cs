@@ -17,9 +17,9 @@ public static class BatteryLevels
 {
     public static BatteryLevel FromPercent(int percent) => percent switch
     {
-        <= 10 => BatteryLevel.Critical,
-        <= 20 => BatteryLevel.VeryLow,
-        <= 30 => BatteryLevel.Low,
+        <= 7 => BatteryLevel.Critical,
+        <= 13 => BatteryLevel.VeryLow,
+        <= 20 => BatteryLevel.Low,
         _ => BatteryLevel.Normal,
     };
 

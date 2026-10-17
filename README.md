@@ -16,8 +16,8 @@ Fußzeile mit Verweis in die Systemeinstellungen.
 - Verbinden und Trennen per Schalter
 - Helles und dunkles Design, folgt dem Windows-Modus und wechselt live mit
 - Akkustand für Geräte, die ihn melden, farbig nach Stufe: normal (weiß bzw. im hellen Design
-  dunkel), bis 30 % gelb, bis 20 % orange, bis 10 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
-- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät bei 30 % oder darunter, erscheint alle drei
+  dunkel), bis 20 % gelb, bis 13 % orange, bis 7 % rot — gleich in Liste, Akku-Hinweis und Tray-Icon
+- Warnung bei niedrigem Akku: Liegt ein verbundenes Gerät bei 20 % oder darunter, erscheint alle drei
   Minuten für 15 Sekunden ein Hinweis unten rechts, begleitet vom Windows-Ton für
   schwachen Akku. Der Hinweis landet nicht in der Mitteilungszentrale.
 - Tray-Icon mit der Anzahl verbundener Geräte, eingefärbt nach dem schwächsten Akku; folgt dem hellen bzw. dunklen Taskbar-Theme
