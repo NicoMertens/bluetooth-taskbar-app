@@ -51,6 +51,8 @@ Trennen als gelungen durch.
 ## Akkustand
 
 Der Akkustand stammt aus der PnP-Eigenschaft, die Windows selbst befüllt. Geräte, die
-sie nicht setzen, zeigen keinen Wert; für verbundene LE-Geräte wird ersatzweise der
-GATT Battery Service gelesen. Abgefragt wird alle 90 Sekunden und beim Öffnen des
-Flyouts.
+sie nicht setzen, zeigen keinen Wert. Wird der Adapter neu eingebunden (etwa an einem
+anderen USB-Port), bleiben die alten Knoten im selben Container mit ihrem letzten Stand
+liegen; Werte von Knoten mit `System.Devices.Present` = false werden daher übergangen.
+Für verbundene LE-Geräte wird ersatzweise der GATT Battery Service gelesen. Abgefragt
+wird alle 90 Sekunden und beim Öffnen des Flyouts.
