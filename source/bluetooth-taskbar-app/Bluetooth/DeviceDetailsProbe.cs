@@ -24,7 +24,9 @@ public static class DeviceDetailsProbe
 
     private const string ContainerIdKey = "System.Devices.ContainerId";
 
-    private static readonly string[] PnpProperties = [BatteryPropertyKey, ContainerIdKey, ClassGuidKey];
+    private const string PresentKey = "System.Devices.Present";
+
+    private static readonly string[] PnpProperties = [BatteryPropertyKey, ContainerIdKey, ClassGuidKey, PresentKey];
 
     /// <summary>Reading GATT touches the radio; keep it from hanging the refresh.</summary>
     private static readonly TimeSpan GattTimeout = TimeSpan.FromSeconds(4);
@@ -92,6 +94,10 @@ public static class DeviceDetailsProbe
                 }
 
                 if (!item.Properties.TryGetValue(BatteryPropertyKey, out object? raw) || raw is null)
+                    continue;
+
+                // Verwaiste Knoten eines neu eingebundenen Adapters behalten im selben Container ihren alten Akkustand.
+                if (item.Properties.TryGetValue(PresentKey, out object? present) && present is false)
                     continue;
 
                 int percent;
